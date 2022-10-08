@@ -46,12 +46,12 @@ class Tareas {
 
       if (completadas && estado === 'Completada'.cyan) {
         contador++
-        console.log(`${(contador + '.').cyan} ${desc} :: ${completadoEn}`)
+        console.log(`${(contador + '.').cyan} ${desc} :: ${completadoEn.cyan}`)
       }
 
       if (!completadas && estado === 'Pendiente'.red) {
         contador++
-        console.log(`${(contador + '.').red} ${desc} :: ${estado}`)
+        console.log(`${(contador + '.').cyan} ${desc} :: ${estado}`)
       }
     })
   }
@@ -59,6 +59,21 @@ class Tareas {
     if (this._listado[id]) {
       delete this._listado[id]
     }
+  }
+
+  toggleCompletadas(ids = []) {
+    ids.forEach((id) => {
+      const tarea = this._listado[id]
+      if (!tarea.completadoEn) {
+        tarea.completadoEn = new Date().toISOString()
+      }
+    })
+
+    this.getListadoArr.forEach((tarea) => {
+      if (!ids.includes(tarea.id)) {
+        this._listado[tarea.id].completadoEn = null
+      }
+    })
   }
 }
 

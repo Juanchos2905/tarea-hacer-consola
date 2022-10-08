@@ -4,6 +4,8 @@ const {
   pausa,
   leerInput,
   listadoTareasBorrar,
+  confirmar,
+  mostrarListadoCheckList,
 } = require('./helpers/inquirer')
 const Tareas = require('./models/tareas')
 const { guardarDB, leerDB } = require('./helpers/guardarLeerArchivo')
@@ -34,16 +36,27 @@ const main = async () => {
       case 4:
         tareas.listarPendientesCompletadas(false)
         break
+      case 5:
+        const ids = await mostrarListadoCheckList(tareas.getListadoArr)
+        tareas.toggleCompletadas(ids)
+        break
       case 6:
         const id = await listadoTareasBorrar(tareas.getListadoArr)
+        if (id !== 0) {
+          const resp = await confirmar('¿Está seguro?')
+          if (resp) {
+            tareas.borrarTarea(id)
+            console.log('Tarea borrada')
+          }
+        }
         //hacer confirmación para borrar
         console.log({ id })
         break
     }
     guardarDB(tareas.getListadoArr)
 
-    if (opt !== '0') await pausa()
-  } while (opt !== '0')
+    if (opt !== 7) await pausa()
+  } while (opt !== 7)
   //   pausa()
 }
 
