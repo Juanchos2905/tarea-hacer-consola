@@ -1,3 +1,4 @@
+const color = require('colors')
 const Tarea = require('./tarea')
 
 class Tareas {
@@ -25,6 +26,39 @@ class Tareas {
     tareas.map((tarea) => {
       this._listado[tarea.id] = tarea
     })
+  }
+
+  listadoCompleto() {
+    this.getListadoArr.forEach((tarea, i) => {
+      const idx = `${i + 1}.`.cyan
+      const { desc, completadoEn } = tarea
+      const estado = completadoEn ? 'Completada'.cyan : 'Pendiente'.red
+
+      console.log(`${idx} ${desc} :: ${estado}}`)
+    })
+  }
+
+  listarPendientesCompletadas(completadas = true) {
+    let contador = 0
+    this.getListadoArr.forEach((tarea, i) => {
+      const { desc, completadoEn } = tarea
+      const estado = completadoEn ? 'Completada'.cyan : 'Pendiente'.red
+
+      if (completadas && estado === 'Completada'.cyan) {
+        contador++
+        console.log(`${(contador + '.').cyan} ${desc} :: ${completadoEn}`)
+      }
+
+      if (!completadas && estado === 'Pendiente'.red) {
+        contador++
+        console.log(`${(contador + '.').red} ${desc} :: ${estado}`)
+      }
+    })
+  }
+  borrarTarea(id = '') {
+    if (this._listado[id]) {
+      delete this._listado[id]
+    }
   }
 }
 
